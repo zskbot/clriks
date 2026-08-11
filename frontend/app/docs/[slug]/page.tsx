@@ -11,13 +11,15 @@ import path from "path";
 export default async function DocsPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+
+  const { slug } = await params;
 
   const filePath = path.join(
     process.cwd(),
     "docs",
-    `${params.slug}.md`
+    `${slug}.md`
   );
 
   const content = fs.readFileSync(
