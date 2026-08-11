@@ -126,7 +126,7 @@ class TestTriggers:
 
     def test_schedule_cron_expression_is_well_formed(self, triggers):
         """
-        Validate that the workflow schedule uses the expected well-formed cron expression.
+        Validate that the workflow schedule uses the expected cron expression.
         
         Parameters:
         	triggers (dict): Parsed workflow trigger configuration.
