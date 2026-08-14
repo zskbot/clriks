@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: vi-VN
+
+tone_instructions: https://www.gh-dash.dev/
+
+early_access: true
+
+reviews:
+  profile: assertive
+  request_changes_workflow: true
+  high_level_summary_in_walkthrough: true
+  auto_title_instructions: Thiết kế file readme.md giống file nầy https://www.gh-dash.dev/
+  review_details: true
+  fail_commit_status: true
+  labeling_instructions:
+    - label: ClaudeRiks
+      instructions: Public
+  auto_apply_labels: true
+  auto_assign_reviewers: true
+  poem: true
+  path_filters:
+    - dist
+    - src
+    - public
+    - These
+  path_instructions:
+    - path: public/index.html
+      instructions: Pages
+  disable_cache: true
+  slop_detection:
+    label: Thành công
+  auto_review:
+    description_keyword: "@auren @clauderiks @clriks"
+    drafts: true
+  finishing_touches:
+    unit_tests:
+      enabled: false
+    simplify:
+      enabled: true
+  post_merge_actions:
+    - enabled: true
+      name: README.md
+      prompt: Thiết kế file readme.md giống file nầy https://www.gh-dash.dev/
+
+chat:
+  integrations:
+    jira:
+      usage: enabled
+    linear:
+      usage: enabled
+
+knowledge_base:
+  opt_out: true
+  jira:
+    usage: enabled
+  linear:
+    usage: enabled
+    team_keys:
+      - ENG
+  mcp:
+    usage: enabled
+    disabled_servers:
+      - clriks-server
+
+code_generation:
+  docstrings:
+    language: vi-VN
+
+issue_enrichment:
+  auto_enrich:
+    enabled: true
+  labeling:
+    auto_apply_labels: true

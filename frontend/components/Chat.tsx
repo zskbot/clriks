@@ -6,7 +6,17 @@ import axios from 'axios'
 interface ToolCall {  
   tool: string  
   command?: string  
-  result?: any  
+interface ToolCallResult {
+  returncode: number;
+  stdout: string;
+  stderr: string;
+}
+
+interface ToolCall {
+  tool: string;
+  command?: string;
+  result?: ToolCallResult;
+}
 }  
   
 interface Message {  
@@ -32,49 +42,48 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })  
   }, [messages])  
   
-  const handleSendMessage = async () => {  
-    if (!input.trim() || loading) return  
-  
-    const userMessage: Message = {  
-      role: 'user',  
-      content: input,  
-      timestamp: new Date().toISOString(),  
-    }  
-  
-    setMessages((prev) => [...prev, userMessage])  
-    setInput('')  
-    setLoading(true)  
-  
-    try {  
-      const response = await axios.post(  
-        `${process.env.NEXT_PUBLIC_API_URL}/api/chat`,  
-        {  
-          conversation_id: conversationId,  
-          message: input,  
-          use_tools: true,  
-        }  
-      )  
-  
-      const assistantMessage: Message = {  
-        role: 'assistant',  
-        content: response.data.message,  
-        timestamp: response.data.timestamp,  
-        toolCalls: response.data.tool_calls || [],  
-      }  
-  
-      setMessages((prev) => [...prev, assistantMessage])  
-    } catch (error) {  
-      console.error('Error sending message:', error)  
-      const errorMessage: Message = {  
-        role: 'assistant',  
-        content: 'Sorry, I encountered an error. Please try again.',  
-        timestamp: new Date().toISOString(),  
-      }  
-      setMessages((prev) => [...prev, errorMessage])  
-    } finally {  
-      setLoading(false)  
-    }  
-  }  
+  const addMessage = (message: Message) => {
+    setMessages((prev) => [...prev, message])
+  }
+
+  const handleSendMessage = async () => {
+    if (!input.trim() || loading) return
+
+    addMessage({
+      role: 'user',
+      content: input,
+      timestamp: new Date().toISOString(),
+    })
+    setInput('')
+    setLoading(true)
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/chat`,
+        {
+          conversation_id: conversationId,
+          message: input,
+          use_tools: true,
+        }
+      )
+
+      addMessage({
+        role: 'assistant',
+        content: response.data.message,
+        timestamp: response.data.timestamp,
+        toolCalls: response.data.tool_calls || [],
+      })
+    } catch (error) {
+      console.error('Error sending message:', error)
+      addMessage({
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date().toISOString(),
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
   
   return (  
     <div className="chat-container">  
@@ -86,7 +95,8 @@ export default function Chat() {
           </div>  
         )}  
         {messages.map((msg, idx) => (  
-          <div key={idx} className={`message ${msg.role}`}>  
+        {messages.map((msg) => (
+          <div key={msg.timestamp} className={`message ${msg.role}`}>
             <p>{msg.content}</p>  
             {msg.toolCalls && msg.toolCalls.length > 0 && (  
               <div className="tool-calls">  
