@@ -2,47 +2,22 @@ import DocsSidebar from "@/components/docs/DocsSidebar";
 import DocsHeader from "@/components/docs/DocsHeader";
 import DocsTOC from "@/components/docs/DocsTOC";
 
-
 export default function DocsLayout({
- children,
+  children,
 }: {
- children: React.ReactNode;
+  children: React.ReactNode;
 }) {
+  return (
+    <div className="min-h-screen bg-[#02050c] text-white">
+      <DocsHeader />
 
+      <div className="flex">
+        <DocsSidebar />
 
-return (
+        <main className="flex-1 max-w-5xl p-10">{children}</main>
 
-<div className="min-h-screen bg-[#02050c] text-white">
-
-
-<DocsHeader />
-
-
-<div className="flex">
-
-
-<DocsSidebar />
-
-
-<main className="
-flex-1
-max-w-5xl
-p-10
-">
-
-{children}
-
-</main>
-
-
-<DocsTOC />
-
-
-</div>
-
-
-</div>
-
-);
-
+        <DocsTOC />
+      </div>
+    </div>
+  );
 }

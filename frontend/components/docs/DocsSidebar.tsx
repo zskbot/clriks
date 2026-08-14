@@ -47,15 +47,12 @@ export default function DocsSidebar() {
         </h1>
       </div>
 
-
       {menus.map((menu)=>(
         <div key={menu.title} className="mb-8">
-
           <div className="flex items-center gap-2 text-sm text-zinc-400 mb-3">
             <menu.icon size={16}/>
             {menu.title}
           </div>
-
 
           {menu.items.map(item=>(
             <Link
